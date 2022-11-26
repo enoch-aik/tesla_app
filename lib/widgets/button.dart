@@ -49,8 +49,10 @@ class _CustomButtonState extends State<CustomButton> {
               border: NeumorphicBorder(
                   width: 5,
                   color: isSelected ? selectedBorderColor : scaffoldBg1),
-              depth: 2,
-              lightSource: LightSource.left,
+              depth: isSelected ? -5 : 3,
+              /*shadowLightColor: Colors.transparent,
+              shadowDarkColor: Color(0xff2E2E2E),*/
+              lightSource: LightSource.topLeft,
               color: isSelected ? selectedColor : scaffoldBg2),
           child: Container(
             alignment: Alignment.center,
