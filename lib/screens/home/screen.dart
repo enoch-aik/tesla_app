@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tesla_app/constants/color.dart';
 import 'package:tesla_app/constants/icons.dart';
@@ -61,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 70.h, bottom: 60.h),
+                  padding: EdgeInsets.only(top: 50.h, bottom: 60.h),
                   child: Image.asset(carFront),
                 ),
                 Padding(
@@ -145,15 +146,16 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             Positioned(
-              top: 460.h,
+              top: 440.h,
               left: 180.w,
               right: 180.w,
               child: Column(
                 children: [
                   CustomButton(
                     height: 120.h,
-                    isSelected: false,
+                    isSelected: true,
                     width: 120.h,
+                    isReactive: false,
                     iconPath: lockIcon,
                     iconWidth: 70.w,
                     onTap: () {
@@ -171,7 +173,68 @@ class _HomeScreenState extends State<HomeScreen> {
                   )
                 ],
               ),
-            )
+            ),
+            DraggableScrollableSheet(
+                snap: true,
+                maxChildSize: 0.9,
+                initialChildSize: 0.075,
+                minChildSize: 0.05,
+                builder:
+                    (BuildContext context, ScrollController scrollController) {
+                  return Neumorphic(
+                    style: NeumorphicStyle(
+                        color: scaffoldBg2,
+                        depth: 1,
+                        boxShape: NeumorphicBoxShape.roundRect(
+                            BorderRadius.only(
+                                topLeft: Radius.circular(50.r),
+                                topRight: Radius.circular(50.r))),
+                        border: const NeumorphicBorder(
+                            width: 2, color: scaffoldBg1)),
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 8.h, horizontal: 40.w),
+                      child: ListView(
+                        controller: scrollController,
+                        children: [
+                          Align(
+                            alignment: Alignment.center,
+                            child: GestureDetector(
+                              /*onVerticalDragDown: (DragDownDetails details){
+                                },*/
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.h),
+                                child: Container(
+                                  width: 60.w,
+                                  height: 5.h,
+                                  color: const Color(0xff17181C),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(),
+                              CustomButton(
+                                height: 80.h,
+                                isSelected: true,
+                                width: 80.h,
+                                isReactive: true,
+                                iconPath: powerIcon,
+                                iconWidth: 70.w,
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                })
           ],
         ),
       ),
