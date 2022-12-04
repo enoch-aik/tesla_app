@@ -1,26 +1,29 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tesla_app/constants/color.dart';
 import 'package:tesla_app/constants/slider.dart';
+import 'package:tesla_app/widgets/text.dart';
 
 double radius = 90;
 double strokeWidth = 40;
 
-class CircularSlider extends StatefulWidget {
-  final ValueChanged<double> onAngleChanged;
+class ACControl extends StatefulWidget {
+  final ValueChanged<double> onTempChanged;
 
-  const CircularSlider({
+  const ACControl({
     Key? key,
-    required this.onAngleChanged,
+    required this.onTempChanged,
   }) : super(key: key);
 
   @override
-  State<CircularSlider> createState() => _CircularSliderState();
+  State<ACControl> createState() => _ACControlState();
 }
 
-class _CircularSliderState extends State<CircularSlider> {
-  Offset _currentDragOffset = Offset.zero;
+class _ACControlState extends State<ACControl> {
+  Offset initialOffset = Offset.zero;
 
   double currentAngle = 0;
 
@@ -28,13 +31,15 @@ class _CircularSliderState extends State<CircularSlider> {
 
   double totalAngle = toRadian(360);
 
+  int temperature = 16;
+
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
-    Size canvasSize = Size(screenSize.width, screenSize.width - 35);
+    Size sliderSize = MediaQuery.of(context).size;
+    Size canvasSize = Size(sliderSize.width, sliderSize.width - 35);
     Offset center = canvasSize.center(Offset.zero);
     Offset knobPos = toPolar(
-        center - Offset(strokeWidth + 6.7, -strokeWidth + 19.5),
+        center - Offset(strokeWidth + 6.7, -strokeWidth + 38),
         currentAngle + startAngle,
         radius);
 
@@ -48,29 +53,60 @@ class _CircularSliderState extends State<CircularSlider> {
           ),
           child: Container(),
         ),
+        Align(
+          alignment: Alignment.center,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              KText(
+                '$temperature°C',
+                color: Colors.white,
+                fontWeight: FontWeight.w900,
+                fontSize: 45.sp,
+              ),
+              KText(
+                'Cooling...',
+                fontWeight: FontWeight.w500,
+                fontSize: 18.sp,
+              )
+            ],
+          ),
+        ),
         Positioned(
           left: knobPos.dx,
           top: knobPos.dy,
           child: GestureDetector(
             onPanStart: (details) {
               RenderBox getBox = context.findRenderObject() as RenderBox;
-              _currentDragOffset = getBox.globalToLocal(details.globalPosition);
+              initialOffset = getBox.globalToLocal(details.globalPosition);
             },
             onPanUpdate: (details) {
-              var previousOffset = _currentDragOffset;
-              _currentDragOffset += details.delta;
+              var previousOffset = initialOffset;
+              initialOffset += details.delta;
               var angle = currentAngle +
-                  toAngle(_currentDragOffset, center) -
+                  toAngle(initialOffset, center) -
                   toAngle(previousOffset, center);
-              currentAngle = normalizeAngle(angle);
-              widget.onAngleChanged(currentAngle);
-              setState(() {});
+              if (angle <= 6.10865 && angle >= 0) {
+                currentAngle = normalizeAngle(angle);
+                widget.onTempChanged(currentAngle);
+                getTemperature(angle);
+                setState(() {});
+              }
             },
-            child: _Knob(),
+            child: const _Knob(),
           ),
         ),
       ],
     );
+  }
+
+  getTemperature(double radians) {
+    double addedTemp = radians * (180 / math.pi) / 360 * 18;
+    int newTemperature = 16 + addedTemp.toInt();
+    setState(() {
+      temperature = newTemperature;
+    });
   }
 }
 
@@ -104,15 +140,24 @@ class SliderPainter extends CustomPainter {
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round;
 
-    for (int i = 0; i < meterPoints; i++) {
+    for (int i = 0; i < meterPoints - 1; i++) {
       //printing the arc
       canvas.drawArc(
+        rect,
+        startAngle,
+        math.pi * 2,
+        false,
+        Paint()
+          ..style = PaintingStyle.fill
+          ..strokeWidth = strokeWidth,
+      );
+      canvas.drawArc(
           meterRect,
-          toRadian(startOfArcInDegree + 90),
+          toRadian(startOfArcInDegree + 135),
           toRadian(1),
           false,
           Paint()
-            ..color = currentAngle >= toRadian(startOfArcInDegree)
+            ..color = currentAngle >= toRadian(startOfArcInDegree+ 45)
                 ? kBlueColor
                 : const Color(0xff15171C)
             ..strokeWidth = 10
@@ -136,6 +181,7 @@ class SliderPainter extends CustomPainter {
         false,
         Paint()
           ..color = const Color(0xff1F2124).withOpacity(0.7)
+          ..maskFilter = const MaskFilter.blur(BlurStyle.solid, 3)
           ..style = PaintingStyle.stroke
           ..strokeWidth = strokeWidth);
     canvas.drawArc(rect, startAngle, currentAngle, false, rainbowPaint);
@@ -152,7 +198,16 @@ class _Knob extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return /*SizedBox(
+        height: 35,
+        width: 35,
+        child: Neumorphic(
+          style: const NeumorphicStyle(
+              color: kBlueColor,
+              boxShape: NeumorphicBoxShape.circle(),
+              border: NeumorphicBorder(color: scaffoldBg2, width: 10)),
+        ));*/
+        Container(
       height: 35,
       width: 35,
       decoration: BoxDecoration(

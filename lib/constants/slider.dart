@@ -14,3 +14,5 @@ double normalize(double value, double max) => (value % max + max) % max;
 double toAngle(Offset position, Offset center) => (position - center).direction;
 
 double toRadian(double value) => (value * math.pi) / 180;
+
+double radianToAngle(double radians) => (2 * math.pi * radians);
