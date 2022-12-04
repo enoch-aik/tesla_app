@@ -1,9 +1,11 @@
-import 'package:flutter/material.dart';
+import 'dart:math' as math;
+
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tesla_app/constants/color.dart';
 import 'package:tesla_app/constants/icons.dart';
 import 'package:tesla_app/constants/images.dart';
+import 'package:tesla_app/screens/home/components/ac_meter.dart';
 import 'package:tesla_app/screens/home/components/information_card.dart';
 import 'package:tesla_app/screens/home/components/status.dart';
 import 'package:tesla_app/widgets/button.dart';
@@ -18,6 +20,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int temperature = 0;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -216,7 +219,18 @@ class _HomeScreenState extends State<HomeScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Column(),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  KText(
+                                    'A/C is ON',
+                                    fontWeight: FontWeight.w900,
+                                    fontSize: 24.sp,
+                                  ),
+                                  SizedBox(height: 6.h),
+                                  KText('Tap to turn off or swipe up  for a fast setup',color: darkText,fontSize: 18.sp,)
+                                ],
+                              ),
                               CustomButton(
                                 height: 80.h,
                                 isSelected: true,
@@ -224,12 +238,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                 isReactive: true,
                                 iconPath: powerIcon,
                                 iconWidth: 70.w,
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
+                                onTap: () {},
                               ),
                             ],
-                          )
+                          ),
+                          SizedBox(
+                            height: 550.w,
+                            //width: 300.w,
+                            child: CircularSlider(
+                              onAngleChanged: (angle) {
+                                temperature = ((angle / (math.pi * 2)) * 100).toInt();
+                                setState(() {});
+                              },
+                            ),
+                          ),
                         ],
                       ),
                     ),
