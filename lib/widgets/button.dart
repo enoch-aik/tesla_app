@@ -55,7 +55,7 @@ class _CustomButtonState extends State<CustomButton> {
                           ? selectedBorderColor
                           : scaffoldBg1
                       : scaffoldBg1),
-              depth: isSelected ? -5 : 5,
+              depth: isSelected ? -5 : 3,
               /*shadowLightColor: Colors.transparent,
               shadowDarkColor: Color(0xff2E2E2E),*/
               lightSource: LightSource.topLeft,

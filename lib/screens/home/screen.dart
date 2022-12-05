@@ -12,6 +12,8 @@ import 'package:tesla_app/widgets/button.dart';
 import 'package:tesla_app/widgets/scaffold.dart';
 import 'package:tesla_app/widgets/text.dart';
 
+import 'components/fan_slider.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -21,6 +23,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int temperature = 0;
+  ValueNotifier<bool> ac = ValueNotifier(true);
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontSize: 18.sp,
                             isNeumorphic: true,
                             fontWeight: FontWeight.w900,
-                          )
+                          ),
                         ],
                       ),
                       CustomButton(
@@ -179,93 +182,124 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             DraggableScrollableSheet(
-                snap: true,
-                maxChildSize: 0.9,
-                initialChildSize: 0.075,
-                minChildSize: 0.05,
-                builder:
-                    (BuildContext context, ScrollController scrollController) {
-                  return Neumorphic(
-                    style: NeumorphicStyle(
-                        color: scaffoldBg2,
-                        depth: 1,
-                        boxShape: NeumorphicBoxShape.roundRect(
-                            BorderRadius.only(
-                                topLeft: Radius.circular(50.r),
-                                topRight: Radius.circular(50.r))),
-                        border: const NeumorphicBorder(
-                            width: 2, color: scaffoldBg1)),
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 8.h, horizontal: 40.w),
-                      child: ListView(
-                        controller: scrollController,
-                        children: [
-                          Align(
-                            alignment: Alignment.center,
-                            child: GestureDetector(
-                              /*onVerticalDragDown: (DragDownDetails details){
-                                },*/
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.h),
-                                child: Container(
-                                  width: 60.w,
-                                  height: 5.h,
-                                  color: const Color(0xff17181C),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  KText(
-                                    'A/C is ON',
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 24.sp,
-                                  ),
-                                  SizedBox(height: 6.h),
-                                  KText(
-                                    'Tap to turn off or swipe up  for a fast setup',
-                                    color: darkText,
-                                    fontSize: 18.sp,
-                                  )
-                                ],
-                              ),
-                              CustomButton(
-                                height: 80.h,
-                                isSelected: true,
-                                width: 80.h,
-                                isReactive: true,
-                                iconPath: powerIcon,
-                                iconWidth: 70.w,
-                                onTap: () {},
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 500.w,
-                            //width: 300.w,
-                            child: ACControl(
-                              onTempChanged: (angle) {
-                                temperature =
-                                    ((angle / (math.pi * 2)) * 100).toInt();
-                                setState(() {});
-                              },
-                            ),
-                          ),
-                        ],
+              snap: true,
+              maxChildSize: 0.9,
+              initialChildSize: 0.075,
+              minChildSize: 0.05,
+              builder:
+                  (BuildContext context, ScrollController scrollController) {
+                return Neumorphic(
+                  style: NeumorphicStyle(
+                    color: scaffoldBg2,
+                    depth: 1,
+                    boxShape: NeumorphicBoxShape.roundRect(
+                      BorderRadius.only(
+                        topLeft: Radius.circular(50.r),
+                        topRight: Radius.circular(50.r),
                       ),
                     ),
-                  );
-                })
+                    border:
+                        const NeumorphicBorder(width: 2, color: scaffoldBg1),
+                  ),
+                  child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 8.h, horizontal: 40.w),
+                    child: ListView(
+                      controller: scrollController,
+                      children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: GestureDetector(
+                            /*onVerticalDragDown: (DragDownDetails details){
+                                },*/
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 8.h),
+                              child: Container(
+                                width: 60.w,
+                                height: 5.h,
+                                color: const Color(0xff17181C),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                KText(
+                                  'A/C is ON',
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 24.sp,
+                                ),
+                                SizedBox(height: 6.h),
+                                KText(
+                                  'Tap to turn off or swipe up  for a fast setup',
+                                  color: darkText,
+                                  fontSize: 18.sp,
+                                ),
+                              ],
+                            ),
+                            CustomButton(
+                              height: 80.h,
+                              isSelected: ac.value,
+                              width: 80.h,
+                              isReactive: true,
+                              iconPath: powerIcon,
+                              iconWidth: 70.w,
+                              onTap: () {
+                                ac.value = !ac.value;
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 450.w,
+                          child: ACControl(
+                            ac: ac,
+                            onTempChanged: (angle) {
+                              temperature =
+                                  ((angle / (math.pi * 2)) * 100).toInt();
+                              setState(() {});
+                            },
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: KText(
+                            'Fan speed',
+                            fontSize: 24.sp,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        Padding(
+                          padding:  EdgeInsets.only(top: 30.h),
+                          child: SizedBox(
+                            height: 8.h,
+                            width: 300,
+                            child: CustomPaint(
+                              painter: FanSliderPainter(),
+                              child: Container(),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              },
+            )
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    ac.dispose();
   }
 }
