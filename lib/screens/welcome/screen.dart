@@ -49,13 +49,17 @@ class WelcomeScreen extends StatelessWidget {
               child: const KText('A/C is turned OFF', color: darkText),
             ),
             CustomButton(
+              isReactive: true,
               height: 120.h,
               isSelected: true,
               width: 120.h,
               iconPath: lockIcon,
               iconWidth: 70.w,
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=> const HomeScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const HomeScreen()));
               },
             ),
             Padding(

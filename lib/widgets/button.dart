@@ -7,6 +7,7 @@ import 'package:tesla_app/constants/color.dart';
 class CustomButton extends StatefulWidget {
   final void Function() onTap;
   final String iconPath;
+  final bool isReactive;
   final double? width;
   final double? height;
   final double? iconWidth;
@@ -18,6 +19,7 @@ class CustomButton extends StatefulWidget {
       required this.iconPath,
       required this.onTap,
       this.height,
+      this.isReactive = true,
       this.iconWidth,
       this.width})
       : super(key: key);
@@ -47,20 +49,33 @@ class _CustomButtonState extends State<CustomButton> {
                   isSelected ? NeumorphicShape.concave : NeumorphicShape.convex,
               boxShape: const NeumorphicBoxShape.circle(),
               border: NeumorphicBorder(
-                  width: 5,
-                  color: isSelected ? selectedBorderColor : scaffoldBg1),
+                  width: 3,
+                  color: widget.isReactive
+                      ? isSelected
+                          ? selectedBorderColor
+                          : scaffoldBg1
+                      : scaffoldBg1),
               depth: isSelected ? -5 : 3,
+              //shadowDarkColorEmboss: Colors.white,
               /*shadowLightColor: Colors.transparent,
               shadowDarkColor: Color(0xff2E2E2E),*/
               lightSource: LightSource.topLeft,
-              color: isSelected ? selectedColor : scaffoldBg2),
+              color: widget.isReactive
+                  ? isSelected
+                      ? selectedColor
+                      : scaffoldBg2
+                  : scaffoldBg2),
           child: Container(
             alignment: Alignment.center,
             height: widget.height ?? 63.w,
             width: widget.width ?? 63.w,
             child: SvgPicture.asset(
               widget.iconPath,
-              color: isSelected ? Colors.white : darkText,
+              color: widget.isReactive
+                  ? isSelected
+                      ? Colors.white
+                      : darkText
+                  : darkText,
               width: widget.iconWidth ?? 20.w,
             ),
           ),
