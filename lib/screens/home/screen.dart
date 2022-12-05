@@ -5,14 +5,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tesla_app/constants/color.dart';
 import 'package:tesla_app/constants/icons.dart';
 import 'package:tesla_app/constants/images.dart';
+import 'package:tesla_app/screens/home/components/ac_mode.dart';
 import 'package:tesla_app/screens/home/components/ac_slider.dart';
+import 'package:tesla_app/screens/home/components/fan_slider.dart';
 import 'package:tesla_app/screens/home/components/information_card.dart';
 import 'package:tesla_app/screens/home/components/status.dart';
 import 'package:tesla_app/widgets/button.dart';
 import 'package:tesla_app/widgets/scaffold.dart';
 import 'package:tesla_app/widgets/text.dart';
-
-import 'components/fan_slider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -23,7 +23,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int temperature = 0;
-  ValueNotifier<bool> ac = ValueNotifier(true);
+  ValueNotifier<bool> ac = ValueNotifier(false);
 
   @override
   Widget build(BuildContext context) {
@@ -256,9 +256,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         SizedBox(
-                          height: 450.w,
+                          height: 400.w,
                           child: ACControl(
-                            ac: ac,
+                            acState: ac,
                             onTempChanged: (angle) {
                               temperature =
                                   ((angle / (math.pi * 2)) * 100).toInt();
@@ -266,24 +266,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             },
                           ),
                         ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: KText(
-                            'Fan speed',
-                            fontSize: 24.sp,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
+                        const FanSlider(),
                         Padding(
-                          padding:  EdgeInsets.only(top: 30.h),
-                          child: SizedBox(
-                            height: 8.h,
-                            width: 300,
-                            child: CustomPaint(
-                              painter: FanSliderPainter(),
-                              child: Container(),
-                            ),
-                          ),
+                          padding: EdgeInsets.only(top: 60.h),
+                          child: const ACMode(),
                         )
                       ],
                     ),

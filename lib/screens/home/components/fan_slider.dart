@@ -1,39 +1,86 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:tesla_app/constants/color.dart';
+import 'package:tesla_app/widgets/text.dart';
 
-class FanSliderPainter extends CustomPainter {
+class FanSlider extends StatefulWidget {
+  const FanSlider({Key? key}) : super(key: key);
+
   @override
-  void paint(Canvas canvas, Size size) {
-    double fanSpeedSize = 0;
-    RRect rRect = RRect.fromLTRBR(
-        0, size.height, size.width, size.height + 5, const Radius.circular(10));
-    Path shadowPath = Path()..addRRect(rRect);
+  State<FanSlider> createState() => _FanSliderState();
+}
 
-    canvas.drawRRect(rRect, Paint()..color = const Color(0xff282B2E));
-    canvas.drawShadow(shadowPath, const Color(0xff4E5154), 3, false);
+class _FanSliderState extends State<FanSlider> {
+  double fanSpeed = 0;
 
-    for (int i = 1; i <= 5; i++) {
-      final textPainter = TextPainter(
-          text: TextSpan(
-            text: i.toString(),
-            style: GoogleFonts.lato(
-              color: darkText,
-              fontSize: 14.sp,
+  @override
+  Widget build(BuildContext context) {
+    final widgetWidth = MediaQuery.of(context).size.width;
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.center,
+          child: KText(
+            'Fan speed',
+            fontSize: 24.sp,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 26.h, bottom: 4.h),
+          child: Row(
+            children: [
+              ...List.generate(
+                5,
+                (index) {
+                  if (index < 4) {
+                    return Padding(
+                      padding: EdgeInsets.only(right: widgetWidth / 5.4),
+                      child: KText((index + 1).toString(),
+                          fontSize: 14.sp, color: darkText),
+                    );
+                  } else {
+                    return KText((index + 1).toString(),
+                        fontSize: 14.sp, color: darkText);
+                  }
+                },
+              )
+            ],
+          ),
+        ),
+        SizedBox(
+          width: widgetWidth,
+          child: NeumorphicTheme(
+            theme: NeumorphicThemeData.dark(
+              lightSource: LightSource.top,
+              shadowLightColorEmboss: const Color(0xff4E5154),
+              shadowDarkColorEmboss: Colors.black.withOpacity(0.7),
+            ),
+            child: NeumorphicSlider(
+              value: fanSpeed,
+              onChanged: (value) {
+                setState(() {
+                  fanSpeed = value;
+                });
+              },
+              height: 8.h,
+              style: const SliderStyle(
+                  variant: kBlueColor, accent: kBlueColor, depth: -50),
+              thumb: Container(
+                width: 30.w,
+                height: 30.w,
+                decoration: BoxDecoration(
+                    color: kBlueColor,
+                    border: Border.all(
+                      color: scaffoldBg2,
+                      width: 12.w,
+                    ),
+                    shape: BoxShape.circle),
+              ),
             ),
           ),
-          textDirection: TextDirection.ltr,
-          textAlign: TextAlign.center);
-      textPainter.layout();
-      final offset = Offset(fanSpeedSize, -(2.5 * size.height));
-      textPainter.paint(canvas, offset);
-      fanSpeedSize += size.width / 4.08;
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
+        )
+      ],
+    );
   }
 }

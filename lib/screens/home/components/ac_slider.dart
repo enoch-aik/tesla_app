@@ -14,11 +14,11 @@ double strokeWidth = 40;
 
 class ACControl extends StatefulWidget {
   final ValueChanged<double> onTempChanged;
-  final ValueNotifier<bool> ac;
+  final ValueNotifier<bool> acState;
 
   const ACControl({
     Key? key,
-    required this.ac,
+    required this.acState,
     required this.onTempChanged,
   }) : super(key: key);
 
@@ -29,7 +29,7 @@ class ACControl extends StatefulWidget {
 class _ACControlState extends State<ACControl> {
   Offset initialOffset = Offset.zero;
 
-  double currentAngle = 0.9;
+  double currentAngle = 0.0012350285539897143;
 
   double startAngle = toRadian(90);
 
@@ -40,15 +40,16 @@ class _ACControlState extends State<ACControl> {
   @override
   Widget build(BuildContext context) {
     Size sliderSize = MediaQuery.of(context).size;
+
     Size canvasSize = Size(sliderSize.width, sliderSize.width - 35);
     Offset center = canvasSize.center(Offset.zero);
     Offset knobPos = toPolar(
-        center - Offset(strokeWidth + 6.7, -strokeWidth + 56.5),
+        center - Offset(strokeWidth + 6.5, -strokeWidth + 74.5),
         currentAngle + startAngle,
         radius);
 
     return ValueListenableBuilder(
-        valueListenable: widget.ac,
+        valueListenable: widget.acState,
         builder: (context, acState, _) {
           return Stack(
             children: [
@@ -60,7 +61,7 @@ class _ACControlState extends State<ACControl> {
                 ),
                 child: Container(),
               ),
-              if (widget.ac.value)
+              if (widget.acState.value)
                 Align(
                   alignment: Alignment.center,
                   child: Column(
