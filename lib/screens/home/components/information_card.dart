@@ -4,6 +4,7 @@ import 'package:tesla_app/constants/color.dart';
 import 'package:tesla_app/widgets/text.dart';
 
 class InformationCard extends StatelessWidget {
+  final bool enabled;
   final String bgPath;
   final String title;
   final String details;
@@ -11,6 +12,7 @@ class InformationCard extends StatelessWidget {
   const InformationCard(
       {Key? key,
       required this.bgPath,
+      this.enabled = true,
       required this.details,
       required this.title})
       : super(key: key);
@@ -59,11 +61,14 @@ class InformationCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Positioned(top: 8.w,left: 8.w,
-                  child: Image.asset(
-                    'assets/images/blue_light.png',
-                  ),
-                )
+                if (enabled)
+                  Positioned(
+                    top: 8.w,
+                    left: 8.w,
+                    child: Image.asset(
+                      'assets/images/blue_light.png',
+                    ),
+                  )
               ],
             ),
           ),

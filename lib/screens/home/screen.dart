@@ -1,13 +1,9 @@
-import 'dart:math' as math;
-
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tesla_app/constants/color.dart';
 import 'package:tesla_app/constants/icons.dart';
 import 'package:tesla_app/constants/images.dart';
-import 'package:tesla_app/screens/home/components/ac_mode.dart';
-import 'package:tesla_app/screens/home/components/ac_slider.dart';
-import 'package:tesla_app/screens/home/components/fan_slider.dart';
+import 'package:tesla_app/screens/home/components/bottom_sheet.dart';
 import 'package:tesla_app/screens/home/components/information_card.dart';
 import 'package:tesla_app/screens/home/components/status.dart';
 import 'package:tesla_app/widgets/button.dart';
@@ -22,9 +18,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int temperature = 0;
-  ValueNotifier<bool> ac = ValueNotifier(false);
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -140,6 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           bgPath: 'climate',
                           title: 'Climate',
                           details: 'A/C is ON',
+                          enabled: false,
                         ),
                         const InformationCard(
                           bgPath: 'engine',
@@ -152,10 +146,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
               ],
             ),
-            Positioned(
-              top: 440.h,
-              left: 180.w,
-              right: 180.w,
+            Positioned.fill(
+              top: 390.h,
+              left: 150.w,
+              right: 150.w,
               child: Column(
                 children: [
                   CustomButton(
@@ -184,96 +178,12 @@ class _HomeScreenState extends State<HomeScreen> {
             DraggableScrollableSheet(
               snap: true,
               maxChildSize: 0.9,
-              initialChildSize: 0.075,
+              initialChildSize: 0.12,
               minChildSize: 0.05,
               builder:
                   (BuildContext context, ScrollController scrollController) {
-                return Neumorphic(
-                  style: NeumorphicStyle(
-                    color: scaffoldBg2,
-                    depth: 1,
-                    boxShape: NeumorphicBoxShape.roundRect(
-                      BorderRadius.only(
-                        topLeft: Radius.circular(50.r),
-                        topRight: Radius.circular(50.r),
-                      ),
-                    ),
-                    border:
-                        const NeumorphicBorder(width: 2, color: scaffoldBg1),
-                  ),
-                  child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 8.h, horizontal: 40.w),
-                    child: ListView(
-                      controller: scrollController,
-                      children: [
-                        Align(
-                          alignment: Alignment.center,
-                          child: GestureDetector(
-                            /*onVerticalDragDown: (DragDownDetails details){
-                                },*/
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8.h),
-                              child: Container(
-                                width: 60.w,
-                                height: 5.h,
-                                color: const Color(0xff17181C),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                KText(
-                                  'A/C is ON',
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 24.sp,
-                                ),
-                                SizedBox(height: 6.h),
-                                KText(
-                                  'Tap to turn off or swipe up  for a fast setup',
-                                  color: darkText,
-                                  fontSize: 18.sp,
-                                ),
-                              ],
-                            ),
-                            CustomButton(
-                              height: 80.h,
-                              isSelected: ac.value,
-                              width: 80.h,
-                              isReactive: true,
-                              iconPath: powerIcon,
-                              iconWidth: 70.w,
-                              onTap: () {
-                                ac.value = !ac.value;
-                              },
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 400.w,
-                          child: ACControl(
-                            acState: ac,
-                            onTempChanged: (angle) {
-                              temperature =
-                                  ((angle / (math.pi * 2)) * 100).toInt();
-                              setState(() {});
-                            },
-                          ),
-                        ),
-                        const FanSlider(),
-                        Padding(
-                          padding: EdgeInsets.only(top: 60.h),
-                          child: const ACMode(),
-                        )
-                      ],
-                    ),
-                  ),
+                return HomeBottomSheet(
+                  scrollController: scrollController,
                 );
               },
             )
@@ -281,11 +191,5 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    ac.dispose();
   }
 }
