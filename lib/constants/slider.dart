@@ -4,8 +4,8 @@ import 'package:flutter/gestures.dart';
 
 const fullAngleInRadians = math.pi * 2;
 
-
-
+double radius = 90;
+double strokeWidth = 40;
 
 double normalizeAngle(double angle) => normalize(angle, fullAngleInRadians);
 

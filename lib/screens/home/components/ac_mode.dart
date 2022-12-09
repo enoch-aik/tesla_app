@@ -17,15 +17,7 @@ class _ACModeState extends State<ACMode> {
   Widget build(BuildContext context) {
     List<String> modes = ['Auto', 'Dry', 'Cool', 'Program'];
     List<String> modeIcons = [autoIcon, dryIcon, coolIcon, programIcon];
-    ValueNotifier<List<bool>> modeValue = ValueNotifier([false,false,false,false]);
     List<bool> values = [false,false,false,false];
-    void onChanged(bool val, int index, List currentVal) {
-      setState(() {
-        values = List.generate(4, (i) {
-          return i == index ? val : currentVal[i];
-        });
-      });
-    }
     return Column(
       children: [
         KText(

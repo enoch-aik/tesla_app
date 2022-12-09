@@ -39,80 +39,77 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
         ),
         border: const NeumorphicBorder(width: 2, color: scaffoldBg1),
       ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 40.w),
-        child: ListView(
-          controller: widget.scrollController,
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: GestureDetector(
-                /*onVerticalDragDown: (DragDownDetails details){
-                                },*/
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.h),
-                  child: Container(
-                    width: 60.w,
-                    height: 5.h,
-                    color: const Color(0xff17181C),
-                  ),
+      child: ListView(padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 40.w),
+        controller: widget.scrollController,
+        children: [
+          Align(
+            alignment: Alignment.center,
+            child: GestureDetector(
+              /*onVerticalDragDown: (DragDownDetails details){
+                              },*/
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.h),
+                child: Container(
+                  width: 60.w,
+                  height: 5.h,
+                  color: const Color(0xff17181C),
                 ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ValueListenableBuilder<bool>(
-                        valueListenable: ac,
-                        builder: (context, acState, _) {
-                          return KText(
-                            'A/C is ${acState ? 'ON' : 'OFF'}',
-                            fontWeight: FontWeight.w900,
-                            fontSize: 24.sp,
-                          );
-                        }),
-                    SizedBox(height: 6.h),
-                    KText(
-                      'Tap to turn off or swipe up  for a fast setup',
-                      color: darkText,
-                      fontSize: 18.sp,
-                    ),
-                  ],
-                ),
-                CustomButton(
-                  height: 80.h,
-                  isSelected: ac.value,
-                  width: 80.h,
-                  isReactive: true,
-                  iconPath: powerIcon,
-                  iconWidth: 70.w,
-                  onTap: () {
-                    ac.value = !ac.value;
-                  },
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 400.w,
-              child: ACControl(
-                acState: ac,
-                onTempChanged: (angle) {
-                  temperature = ((angle / (math.pi * 2)) * 100).toInt();
-                  setState(() {});
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ValueListenableBuilder<bool>(
+                      valueListenable: ac,
+                      builder: (context, acState, _) {
+                        return KText(
+                          'A/C is ${acState ? 'ON' : 'OFF'}',
+                          fontWeight: FontWeight.w900,
+                          fontSize: 24.sp,
+                        );
+                      }),
+                  SizedBox(height: 6.h),
+                  KText(
+                    'Tap to turn off or swipe up  for a fast setup',
+                    color: darkText,
+                    fontSize: 18.sp,
+                  ),
+                ],
+              ),
+              CustomButton(
+                height: 80.h,
+                isSelected: ac.value,
+                width: 80.h,
+                isReactive: true,
+                iconPath: powerIcon,
+                iconWidth: 70.w,
+                onTap: () {
+                  ac.value = !ac.value;
                 },
               ),
+            ],
+          ),
+          SizedBox(
+            height: 400.w,
+            child: ACControl(
+              acState: ac,
+              onTempChanged: (angle) {
+                temperature = ((angle / (math.pi * 2)) * 100).toInt();
+                setState(() {});
+              },
             ),
-            const FanSlider(),
-            Padding(
-              padding: EdgeInsets.only(top: 60.h),
-              child: const ACMode(),
-            )
-          ],
-        ),
+          ),
+          const FanSlider(),
+          Padding(
+            padding: EdgeInsets.only(top: 60.h),
+            child: const ACMode(),
+          )
+        ],
       ),
     );
   }

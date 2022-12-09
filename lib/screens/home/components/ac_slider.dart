@@ -9,9 +9,6 @@ import 'package:tesla_app/widgets/text.dart';
 
 import 'ac_control.dart';
 
-double radius = 90;
-double strokeWidth = 40;
-
 class ACControl extends StatefulWidget {
   final ValueChanged<double> onTempChanged;
   final ValueNotifier<bool> acState;
@@ -43,6 +40,7 @@ class _ACControlState extends State<ACControl> {
 
     Size canvasSize = Size(sliderSize.width, sliderSize.width - 35);
     Offset center = canvasSize.center(Offset.zero);
+    //TODO: MAKE POSITION RESPONSIVE
     Offset knobPos = toPolar(
         center - Offset(strokeWidth + 6.5, -strokeWidth + 74.5),
         currentAngle + startAngle,
@@ -82,6 +80,7 @@ class _ACControlState extends State<ACControl> {
                     ],
                   ),
                 ),
+              //Knob
               Positioned(
                 left: knobPos.dx,
                 top: knobPos.dy,
@@ -146,15 +145,17 @@ class SliderPainter extends CustomPainter {
     Rect meterRect = Rect.fromCircle(center: center, radius: radius + 40);
 
     Rect rect = Rect.fromCircle(center: center, radius: radius);
-    var rainbowPaint = Paint()
+    //Painter for the temperature slider
+    var tempPaint = Paint()
       ..color = const Color(0xff005696)
       //..shader = SweepGradient(colors: colors).createShader(rect)
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round;
 
+
+    //add all meters around the circle
     for (int i = 0; i < meterPoints - 1; i++) {
-      //printing the arc
       canvas.drawArc(
         rect,
         startAngle,
@@ -164,6 +165,7 @@ class SliderPainter extends CustomPainter {
           ..style = PaintingStyle.fill
           ..strokeWidth = strokeWidth,
       );
+
       canvas.drawArc(
           meterRect,
           toRadian(startOfArcInDegree + 135),
@@ -197,7 +199,7 @@ class SliderPainter extends CustomPainter {
           ..maskFilter = const MaskFilter.blur(BlurStyle.solid, 3)
           ..style = PaintingStyle.stroke
           ..strokeWidth = strokeWidth);
-    canvas.drawArc(rect, startAngle, currentAngle, false, rainbowPaint);
+    canvas.drawArc(rect, startAngle, currentAngle, false, tempPaint);
   }
 
   @override
