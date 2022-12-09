@@ -9,8 +9,7 @@ import 'package:tesla_app/widgets/text.dart';
 
 import 'ac_control.dart';
 
-double radius = 90;
-double strokeWidth = 40;
+
 
 class ACControl extends StatefulWidget {
   final ValueChanged<double> onTempChanged;
