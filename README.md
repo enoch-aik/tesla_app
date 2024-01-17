@@ -1,6 +1,6 @@
 # tesla_app
 
-Tesla app UI developed Flutter.
+Tesla app UI developed with Flutter.
 
 ## APK file
 https://drive.google.com/file/d/1Q3Q4_LrVPve2536Bh6FluIfjNz2cDZPY
